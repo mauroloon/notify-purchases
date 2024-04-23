@@ -1,30 +1,36 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+# Load the environment variables from .env file
+load_dotenv()
+
+# Get the token from the environment variables
+token = os.getenv("TOKEN_NOTION")
+database_id = os.getenv("DATABASE_PAYMENTS")
+# TODO ver como obtener el mes actual
+month_id = os.getenv("MONTH_ID")
 
 
-token = ""
-
-
-def insert_data_to_notion_table(database_id, data):
-    url = f"https://api.notion.com/v1/databases/{database_id}/query"
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
-        "Notion-Version": "2021-08-16",
-    }
-    payload = {
-        "properties": {
-            "Nombre": {"title": [{"text": {"content": data["name"]}}]},
+class NotionManager:
+    @staticmethod
+    def insert_data_to_notion_table(data: dict):
+        url = "https://api.notion.com/v1/pages"
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2021-08-16",
         }
-    }
-    response = requests.post(url, headers=headers, json=payload)
-    print(response)
-    if response.status_code == 200:
-        print("Data inserted successfully!")
-    else:
-        print("Failed to insert data.")
+        payload = {
+            "parent": {"database_id": database_id},
+            "properties": {
+                "Nombre": {"title": [{"text": {"content": data.get("name")}}]},
+                "Monto": {"number": data.get("amount")},
+                "Tipo": {"select": {"name": "Sin categorizar"}},
+                "Persona": {"select": {"name": "Mauricio"}},
+                "Saldos mensuales": {"relation": [{"id": month_id}]},
+            },
+        }
+        response = requests.post(url, headers=headers, json=payload)
 
-
-# Example usage
-database_id = ""
-data = {"name": "prueba", "amount": 1000, "phone": "+1234567890"}
-insert_data_to_notion_table(database_id, data)
+        return response.text
