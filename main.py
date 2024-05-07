@@ -1,7 +1,7 @@
 from function import EmailManager
 from function import NotionManager
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     data = EmailManager.get_payment_email()
     for d in data:
         print(f"De: {d['from']}")
@@ -9,11 +9,12 @@ if __name__ == "__main__":
         print(f"Monto: {d['monto']}")
         print(f"Fecha: {d['fecha']} {d['hora']}")
         print(f"Comercio: {d['comercio']}")
-        print("----------")
+        print('----------')
 
+        amount = int(d['monto'].replace('$', '').replace('.', '').replace(',', '.'))
         data = {
-            "name": d["comercio"],
-            "amount": d["monto"],
+            'name': d['comercio'],
+            'amount': amount,
         }
         result = NotionManager.insert_data_to_notion_table(data)
 

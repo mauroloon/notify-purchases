@@ -1,0 +1,25 @@
+line-length = 100
+exclude = ["__init__.py"]
+
+[format]
+quote-style = "single"
+line-ending = "auto"
+
+[isort]
+force-single-line = true
+
+[lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
