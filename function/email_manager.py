@@ -1,5 +1,6 @@
 import base64
 from datetime import datetime
+from datetime import timedelta
 
 from googleapiclient.discovery import build
 
@@ -15,7 +16,7 @@ class EmailManager:
             print('No hay credenciales.')
             return
         service = build('gmail', 'v1', credentials=credentials)
-        date_now = datetime.now().strftime('%Y/%m/%d')
+        date_now = (datetime.now() - timedelta(days=1)).strftime('%Y/%m/%d')
         # date_now = '2024/04/18' # Test
         result = (
             service.users()

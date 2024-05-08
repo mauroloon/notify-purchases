@@ -11,11 +11,12 @@ if __name__ == '__main__':
         print(f"Comercio: {d['comercio']}")
         print('----------')
 
-        amount = int(d['monto'].replace('$', '').replace('.', '').replace(',', '.'))
-        data = {
-            'name': d['comercio'],
-            'amount': amount,
-        }
-        result = NotionManager.insert_data_to_notion_table(data)
+        if 'USD' not in d['monto']:
+            amount = int(d['monto'].replace('$', '').replace('.', '').replace(',', '.'))
+            data = {
+                'name': d['comercio'],
+                'amount': amount,
+            }
+            result = NotionManager.insert_data_to_notion_table(data)
 
         print(result)
