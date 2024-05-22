@@ -3,6 +3,10 @@ from function import NotionManager
 
 if __name__ == '__main__':
     data = EmailManager.get_payment_email()
+
+    db_name = 'Saldos mensuales'
+    database_id = NotionManager.get_id_data_bases(db_name)
+    month_id = NotionManager.get_last_month_id(database_id)
     for d in data:
         print(f"De: {d['from']}")
         print(f"Asunto: {d['subject']}")
@@ -17,6 +21,6 @@ if __name__ == '__main__':
                 'name': d['comercio'],
                 'amount': amount,
             }
-            result = NotionManager.insert_data_to_notion_table(data)
+            result = NotionManager.insert_payment_data_by_month(data, month_id)
 
         print(result)
