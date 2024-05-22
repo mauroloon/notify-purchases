@@ -54,7 +54,7 @@ class EmailManager:
                         'subject': subject,
                         'monto': monto,
                         'fecha': fecha,
-                        'comercio': comercio,
+                        'comercio': comercio.title(),
                         'hora': hora,
                     }
                 )
