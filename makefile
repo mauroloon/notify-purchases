@@ -18,16 +18,11 @@ update-test:
 
 update-test2:
 	mkdir package
-	pip install -r requirements.txt -t package
-	cd package
-	zip -r ../function.zip .
+	pip install -r requirements.txt -t package && cd package && zip -r ../function.zip .
 	cd ..
-	cd data
-	zip -r ../function.zip ./data
-	cd ..
-	cd function
-	zip -r ../function.zip ./function
-	cd ..
+	zip -r function.zip data
+	zip -r function.zip utils
+	zip -r function.zip function
 	zip function.zip lambda_function.py
 	aws lambda update-function-code --function-name notify-purchases --zip-file fileb://function.zip
 	rm -rf package

@@ -1,10 +1,19 @@
+import logging
+
 from function import EmailManager
 from function import NotionManager
 
+# Configura el nivel de logging a INFO
+logging.basicConfig(level=logging.INFO)
+
+# Crea un logger
+logger = logging.getLogger(__name__)
+
 
 def lambda_handler(event, context):
+    logger.info('Inicio de la función.')
     data = EmailManager.get_payment_email()
-
+    logger.info(f'Datos obtenidos: {data}')
     db_name = 'Saldos mensuales'
     database_id = NotionManager.get_id_data_bases(db_name)
     month_id = NotionManager.get_last_month_id(database_id)
