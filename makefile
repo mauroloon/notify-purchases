@@ -30,4 +30,4 @@ update-test2:
 	cd ..
 	zip function.zip lambda_function.py
 	aws lambda update-function-code --function-name notify-purchases --zip-file fileb://function.zip
-	rm -rf packagez
+	rm -rf package
