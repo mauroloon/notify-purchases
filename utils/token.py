@@ -11,8 +11,8 @@ SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
 # Construir las rutas a los archivos credentials.json y token.json
-credentials_file_path = os.path.join(current_directory, '..', 'temp/data', 'credentials.json')
-token_file_path = os.path.join(current_directory, '..', 'temp/data', 'token.json')
+credentials_file_path = os.path.join(current_directory, '..', 'tmp/data', 'credentials.json')
+token_file_path = os.path.join(current_directory, '..', 'tmp/data', 'token.json')
 
 
 def get_credentials():
