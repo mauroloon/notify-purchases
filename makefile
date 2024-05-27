@@ -41,8 +41,11 @@ update-package:
 zip-package:
 	cd package && zip -r ../function.zip .
 	cd ..
-	zip -r function.zip data
+	zip -r function.zip temp
 	zip -r function.zip utils
 	zip -r function.zip function
 	zip function.zip lambda_function.py
 
+clean-package:
+	rm -rf package
+	rm function.zip
