@@ -3,17 +3,14 @@ import logging
 from function import EmailManager
 from function import NotionManager
 
-# Configura el nivel de logging a INFO
-logging.basicConfig(level=logging.INFO)
-
 # Crea un logger
-logger = logging.getLogger(__name__)
+logging.getLogger().setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    logger.info('Inicio de la función.')
+    logging.info('Inicio de la función.')
     data = EmailManager.get_payment_email()
-    logger.info(f'Datos obtenidos: {data}')
+    logging.info(f'Datos obtenidos: {data}')
     db_name = 'Saldos mensuales'
     database_id = NotionManager.get_id_data_bases(db_name)
     month_id = NotionManager.get_last_month_id(database_id)
@@ -31,6 +28,6 @@ def lambda_handler(event, context):
                 'name': d['comercio'],
                 'amount': amount,
             }
-            result = NotionManager.insert_payment_data_by_month(data, month_id)
+            NotionManager.insert_payment_data_by_month(data, month_id)
 
-        print(result)
+            logging.info("Se ha insertado el pago de " + d['monto'] + " en " + d['comercio'] + " en la base de datos.")

@@ -162,3 +162,5 @@ cython_debug/
 token.json
 credentials.json
 .vscode
+
+package

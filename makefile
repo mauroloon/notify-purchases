@@ -27,3 +27,22 @@ update-test2:
 	aws lambda update-function-code --function-name notify-purchases --zip-file fileb://function.zip
 	rm -rf package
 	rm function.zip
+
+start:
+	python3 main.py
+
+install-package:
+	mkdir package
+	pip install -r requirements.txt -t package
+
+update-package:
+	pip install -r requirements.txt -t package
+
+zip-package:
+	cd package && zip -r ../function.zip .
+	cd ..
+	zip -r function.zip data
+	zip -r function.zip utils
+	zip -r function.zip function
+	zip function.zip lambda_function.py
+

@@ -1,5 +1,9 @@
+import logging
+
 from function import EmailManager
 from function import NotionManager
+
+logging.getLogger().setLevel(logging.INFO)
 
 if __name__ == '__main__':
     data = EmailManager.get_payment_email()
@@ -22,5 +26,7 @@ if __name__ == '__main__':
                 'amount': amount,
             }
             result = NotionManager.insert_payment_data_by_month(data, month_id)
+
+            logging.info("Se ha insertado el pago de " + d['monto'] + " en " + d['comercio'] + " en la base de datos.")
 
         print(result)
