@@ -1,2 +1,3 @@
-from function.email_manager import EmailManager  # noqa
-from function.notion_manager import NotionManager  # noqa
+from function.EmailManager import EmailManager  # noqa
+from function.NotionManager import NotionManager  # noqa
+from function.DynamoManager import DynamoManager  # noqa
