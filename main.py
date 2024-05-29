@@ -1,13 +1,14 @@
 import logging
 
-from function import DynamoManager
+# from function import DynamoManager
 from function import EmailManager
+from function import IndicatorManager
 from function import NotionManager
 
 logging.getLogger().setLevel(logging.INFO)
 
 if __name__ == '__main__':
-    DynamoManager.upload_gmail_data({})
+    # DynamoManager.upload_gmail_data({})
 
     data = EmailManager.get_payment_email()
 
@@ -24,18 +25,23 @@ if __name__ == '__main__':
 
         if 'USD' not in d['monto']:
             amount = int(d['monto'].replace('$', '').replace('.', '').replace(',', '.'))
-            data = {
-                'name': d['comercio'],
-                'amount': amount,
-            }
-            result = NotionManager.insert_payment_data_by_month(data, month_id)
-
-            logging.info(
-                'Se ha insertado el pago de '
-                + d['monto']
-                + ' en '
-                + d['comercio']
-                + ' en la base de datos.'
+        else:
+            value_usd = IndicatorManager.get_value_by_code('dolar')
+            amount = int(
+                float(d['monto'].replace('USD', '').replace('.', '').replace(',', '').strip())
+                * value_usd
             )
 
-        print(result)
+        data = {
+            'name': d['comercio'],
+            'amount': amount,
+        }
+        result = NotionManager.insert_payment_data_by_month(data, month_id)
+
+        logging.info(
+            'Se ha insertado el pago de '
+            + d['monto']
+            + ' en '
+            + d['comercio']
+            + ' en la base de datos.'
+        )
