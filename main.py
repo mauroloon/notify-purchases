@@ -28,8 +28,7 @@ if __name__ == '__main__':
         else:
             value_usd = IndicatorManager.get_value_by_code('dolar')
             amount = int(
-                float(d['monto'].replace('USD', '').replace('.', '').replace(',', '').strip())
-                * value_usd
+                float(d['monto'].replace('USD', '').replace(' ', '').replace(',', '.')) * value_usd
             )
 
         data = {
