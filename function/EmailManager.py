@@ -9,17 +9,70 @@ from utils import get_payment_data_html
 
 
 class EmailManager:
-    @staticmethod
-    def get_payment_email() -> list:
-        credentials = get_credentials()
-        if not credentials:
+    def __init__(self) -> None:
+        self.credentials = get_credentials()
+        self.service = build('gmail', 'v1', credentials=self.credentials)
+
+    def get_gmail_payment_label(self) -> dict:
+        """
+        Obtiene la etiqueta de pagos registrados.
+
+        Returns:
+            - dict: Etiqueta de pagos registrados.
+        """
+        if not self.credentials:
             print('No hay credenciales.')
             return
-        service = build('gmail', 'v1', credentials=credentials)
+
+        results = self.service.users().labels().list(userId='me').execute()
+        labels = results.get('labels', [])
+
+        if not labels:
+            print('No hay etiquetas.')
+            return
+        payment_label = next(
+            (label for label in labels if label['name'] == 'Pagos registrados'), None
+        )
+        return payment_label
+
+    def add_label_to_email(self, message_id: str, label_id: str) -> None:
+        """
+        Agrega una etiqueta a un correo.
+
+        Args:
+            - message_id (str): ID del mensaje.
+            - label_id (str): ID de la etiqueta.
+
+        Returns:
+            - None
+        """
+        if not self.credentials:
+            print('No hay credenciales.')
+            return
+
+        self.service.users().messages().modify(
+            userId='me', id=message_id, body={'addLabelIds': [label_id]}
+        ).execute()
+
+    def get_payment_email(self, label: str = '') -> list:
+        """
+        Obtiene los correos de pagos realizados.
+
+        Args:
+            - label (str): ID de la etiqueta.
+
+        Returns:
+            - list: Lista de pagos realizados.
+
+        """
+        if not self.credentials:
+            print('No hay credenciales.')
+            return
+
         date_now = (datetime.now() - timedelta(days=1)).strftime('%Y/%m/%d')
         # date_now = '2024/04/18' # Test
         result = (
-            service.users()
+            self.service.users()
             .messages()
             .list(userId='me', q=f'after:{date_now} from:contacto@bci.cl')
             .execute()
@@ -33,7 +86,7 @@ class EmailManager:
 
         # TODO: optimizar
         for message in messages:
-            msg = service.users().messages().get(userId='me', id=message['id']).execute()
+            msg = self.service.users().messages().get(userId='me', id=message['id']).execute()
             # Decodificar el mensaje
             message_data = msg['payload']['headers']
             for values in message_data:
@@ -58,5 +111,6 @@ class EmailManager:
                         'hora': hora,
                     }
                 )
+                self.add_label_to_email(message['id'], label)
 
         return data
