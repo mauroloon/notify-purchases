@@ -9,8 +9,13 @@ logging.getLogger().setLevel(logging.INFO)
 
 if __name__ == '__main__':
     # DynamoManager.upload_gmail_data({})
+    email_manager = EmailManager()
+    labels = email_manager.get_gmail_payment_label()
+    if not labels:
+        logging.info('No se ha encontrado la etiqueta de pagos.')
+        exit()
 
-    data = EmailManager.get_payment_email()
+    data = email_manager.get_payment_email(labels['id'])
 
     db_name = 'Saldos mensuales'
     database_id = NotionManager.get_id_data_bases(db_name)
@@ -35,7 +40,7 @@ if __name__ == '__main__':
             'name': d['comercio'],
             'amount': amount,
         }
-        result = NotionManager.insert_payment_data_by_month(data, month_id)
+        NotionManager.insert_payment_data_by_month(data, month_id)
 
         logging.info(
             'Se ha insertado el pago de '
