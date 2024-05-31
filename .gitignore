@@ -164,3 +164,4 @@ credentials.json
 .vscode
 
 package
+.DS_Store
