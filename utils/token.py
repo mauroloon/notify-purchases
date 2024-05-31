@@ -4,17 +4,15 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 
 # Obtener la ruta absoluta del directorio actual
 current_directory = os.path.dirname(os.path.abspath(__file__))
 
 # Construir las rutas a los archivos credentials.json y token.json
-credentials_file_path = os.path.join(
-    current_directory, '..', 'data', 'credentials.json'
-)
-token_file_path = os.path.join(current_directory, '..', 'data', 'token.json')
+credentials_file_path = os.path.join(current_directory, '..', 'tmp/data', 'credentials.json')
+token_file_path = os.path.join(current_directory, '..', 'tmp/data', 'token.json')
 
 
 def get_credentials():
@@ -31,12 +29,10 @@ def get_credentials():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                credentials_file_path, SCOPES
-            )
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_file_path, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open(token_file_path, "w") as token:
+        with open(token_file_path, 'w') as token:
             token.write(creds.to_json())
 
     return creds
