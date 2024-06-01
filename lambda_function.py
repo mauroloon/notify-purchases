@@ -15,12 +15,16 @@ def lambda_handler(event, context):
     if not labels:
         logging.info('No se ha encontrado la etiqueta de pagos.')
         exit()
-
-    data = email_manager.get_payment_email(labels['id'])
+    data = email_manager.get_payment_email(labels)
 
     db_name = 'Saldos mensuales'
     database_id = NotionManager.get_id_data_bases(db_name)
     month_id = NotionManager.get_last_month_id(database_id)
+
+    if not data:
+        logging.info('No hay correos.')
+        exit()
+
     for d in data:
         print(f"De: {d['from']}")
         print(f"Asunto: {d['subject']}")
