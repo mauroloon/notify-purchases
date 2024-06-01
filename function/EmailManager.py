@@ -54,7 +54,7 @@ class EmailManager:
             userId='me', id=message_id, body={'addLabelIds': [label_id]}
         ).execute()
 
-    def get_payment_email(self, label: str = '') -> list:
+    def get_payment_email(self, label: dict = {}) -> list:
         """
         Obtiene los correos de pagos realizados.
 
@@ -68,13 +68,14 @@ class EmailManager:
         if not self.credentials:
             print('No hay credenciales.')
             return
-
+        label_id = label['id']
+        label_name = label['name']
         date_now = (datetime.now() - timedelta(days=1)).strftime('%Y/%m/%d')
         # date_now = '2024/04/18' # Test
         result = (
             self.service.users()
             .messages()
-            .list(userId='me', q=f'after:{date_now} from:contacto@bci.cl')
+            .list(userId='me', q=f'after:{date_now} from:contacto@bci.cl -label:{label_name}')
             .execute()
         )
         messages = result.get('messages', [])
@@ -111,6 +112,6 @@ class EmailManager:
                         'hora': hora,
                     }
                 )
-                self.add_label_to_email(message['id'], label)
+                self.add_label_to_email(message['id'], label_id)
 
         return data
