@@ -4,12 +4,11 @@ from function import EmailManager
 from function import IndicatorManager
 from function import NotionManager
 
-logger = logging.getLogger()
-logger.setLevel('INFO')
+logging.getLogger().setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    logger.info('Inicio de la función.')
+    logging.info('Inicio de la función.')
     email_manager = EmailManager()
     labels = email_manager.get_gmail_payment_label()
     if not labels:

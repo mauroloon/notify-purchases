@@ -1,6 +1,5 @@
 import logging
 
-# from function import DynamoManager
 from function import EmailManager
 from function import IndicatorManager
 from function import NotionManager
@@ -8,7 +7,6 @@ from function import NotionManager
 logging.getLogger().setLevel(logging.INFO)
 
 if __name__ == '__main__':
-    # DynamoManager.upload_gmail_data({})
     email_manager = EmailManager()
     labels = email_manager.get_gmail_payment_label()
     if not labels:
@@ -23,7 +21,7 @@ if __name__ == '__main__':
     if not data:
         logging.info('No hay correos.')
         exit()
-        
+
     for d in data:
         print(f"De: {d['from']}")
         print(f"Asunto: {d['subject']}")
