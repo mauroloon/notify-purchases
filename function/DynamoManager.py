@@ -1,4 +1,6 @@
 import json
+from datetime import datetime
+from uuid import uuid4
 
 import boto3
 
@@ -9,7 +11,7 @@ class DynamoManager:
     @staticmethod
     def upload_gmail_data(data: dict):
         dynamodb = boto3.resource('dynamodb', region_name=REGION_AWS)
-        table = dynamodb.Table('GmailTokens')
+        table = dynamodb.Table('Gmails')
 
         with open('tmp/data/token.json') as token_file:
             token_data = json.load(token_file)
@@ -17,7 +19,8 @@ class DynamoManager:
         # Subir el token a DynamoDB
         table.put_item(
             Item={
-                #'User': 'your-user-id',  # Puede ser cualquier identificador único del usuario
-                'Data': token_data,
+                'id': str(uuid4()),
+                'data': token_data,
+                'date': datetime.now().strftime('%Y-%m-%d'),
             }
         )
