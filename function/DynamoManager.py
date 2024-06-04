@@ -1,26 +1,52 @@
-import json
+import os
 from datetime import datetime
 from uuid import uuid4
 
 import boto3
+from dotenv import load_dotenv
 
-REGION_AWS = 'us-east-2'
+load_dotenv()
+
+
+REGION_AWS = os.getenv('REGION')
 
 
 class DynamoManager:
     @staticmethod
-    def upload_gmail_data(data: dict):
+    def upload_gmail_data(data: dict) -> None:
+        """
+        Sube el token a DynamoDB.
+
+        Args:
+            - data (dict): Token de Gmail.
+
+        Returns:
+            - None
+        """
         dynamodb = boto3.resource('dynamodb', region_name=REGION_AWS)
         table = dynamodb.Table('Gmails')
-
-        with open('tmp/data/token.json') as token_file:
-            token_data = json.load(token_file)
 
         # Subir el token a DynamoDB
         table.put_item(
             Item={
                 'id': str(uuid4()),
-                'data': token_data,
+                'data': data,
                 'date': datetime.now().strftime('%Y-%m-%d'),
             }
         )
+
+    @staticmethod
+    def get_gmail_data() -> dict:
+        """
+        Obtiene el último item de la tabla Gmails.
+
+        Returns:
+            - dict: Último item de la tabla Gmails.
+        """
+        dynamodb = boto3.resource('dynamodb', region_name=REGION_AWS)
+        table = dynamodb.Table('Gmails')
+
+        response = table.scan()
+        items = response['Items']
+        last_item = items[-1] if items else None
+        return last_item
