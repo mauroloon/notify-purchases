@@ -33,7 +33,7 @@ start:
 
 install-package:
 	mkdir package
-	pip install -r requirements.txt -t package
+	pip install -r requirements_lambda.txt -t package
 
 update-package:
 	pip install -r requirements.txt -t package

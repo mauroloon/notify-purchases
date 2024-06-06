@@ -12,8 +12,13 @@ def lambda_handler(event, context):
     email_manager = EmailManager()
     labels = email_manager.get_gmail_payment_label()
     if not labels:
-        logging.info('No se ha encontrado la etiqueta de pagos.')
-        exit()
+        return {
+            'statusCode': 200,
+            'body': {
+                'message': 'No se ha encontrado la etiqueta de pagos.',
+            },
+        }
+
     data = email_manager.get_payment_email(labels)
 
     db_name = 'Saldos mensuales'
@@ -21,16 +26,25 @@ def lambda_handler(event, context):
     month_id = NotionManager.get_last_month_id(database_id)
 
     if not data:
-        logging.info('No hay correos.')
-        exit()
+        return {
+            'statusCode': 200,
+            'body': {
+                'message': 'No hay correos.',
+            },
+        }
 
     for d in data:
-        print(f"De: {d['from']}")
-        print(f"Asunto: {d['subject']}")
-        print(f"Monto: {d['monto']}")
-        print(f"Fecha: {d['fecha']} {d['hora']}")
-        print(f"Comercio: {d['comercio']}")
-        print('----------')
+        logging.info(
+            'Pago',
+            {
+                'from': d['from'],
+                'subject': d['subject'],
+                'monto': d['monto'],
+                'fecha': d['fecha'],
+                'hora': d['hora'],
+                'comercio': d['comercio'],
+            },
+        )
 
         if 'USD' not in d['monto']:
             amount = int(d['monto'].replace('$', '').replace('.', '').replace(',', '.'))
@@ -53,3 +67,10 @@ def lambda_handler(event, context):
             + d['comercio']
             + ' en la base de datos.'
         )
+
+    return {
+        'statusCode': 200,
+        'body': {
+            'message': 'Se han insertado los pagos en la base de datos.',
+        },
+    }
