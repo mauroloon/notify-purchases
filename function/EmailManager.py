@@ -4,14 +4,29 @@ from datetime import timedelta
 
 from googleapiclient.discovery import build
 
+from utils import Logger
 from utils import get_credentials
 from utils import get_payment_data_html
+
+logger = Logger(__name__)
 
 
 class EmailManager:
     def __init__(self) -> None:
         self.credentials = get_credentials()
         self.service = build('gmail', 'v1', credentials=self.credentials)
+
+    def check_credentials(self) -> bool:
+        """
+        Verifica si las credenciales son válidas.
+
+        Returns:
+            - bool: True si las credenciales son válidas, False en caso contrario.
+        """
+        if not self.credentials:
+            logger.info('No hay credenciales.')
+            return False
+        return True
 
     def get_gmail_payment_label(self) -> dict:
         """
@@ -20,8 +35,7 @@ class EmailManager:
         Returns:
             - dict: Etiqueta de pagos registrados.
         """
-        if not self.credentials:
-            print('No hay credenciales.')
+        if not self.check_credentials:
             return
 
         results = self.service.users().labels().list(userId='me').execute()
@@ -46,15 +60,14 @@ class EmailManager:
         Returns:
             - None
         """
-        if not self.credentials:
-            print('No hay credenciales.')
+        if not self.check_credentials:
             return
 
         self.service.users().messages().modify(
             userId='me', id=message_id, body={'addLabelIds': [label_id]}
         ).execute()
 
-    def get_payment_email(self, label: dict = {}) -> list:
+    def get_payment_email(self, label: dict = None) -> list:
         """
         Obtiene los correos de pagos realizados.
 
@@ -65,9 +78,9 @@ class EmailManager:
             - list: Lista de pagos realizados.
 
         """
-        if not self.credentials:
-            print('No hay credenciales.')
+        if not self.check_credentials:
             return
+
         label_id = label['id']
         label_name = label['name']
         date_now = (datetime.now() - timedelta(days=1)).strftime('%Y/%m/%d')
