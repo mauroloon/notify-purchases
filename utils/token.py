@@ -6,7 +6,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 from function.DynamoManager import DynamoManager
-from utils import Logger
+from utils.logger import Logger
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 

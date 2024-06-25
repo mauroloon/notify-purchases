@@ -46,6 +46,9 @@ start:
 	python3 main.py
 
 install-package:
+	@+echo $(HEADER)"---------------------------------------------"$(END)
+	@+echo $(HEADER)"Instalando paquetes en directorio 'package'"$(END)
+	@+echo $(HEADER)"---------------------------------------------"$(END)
 	mkdir package
 	pip install -r requirements_lambda.txt -t package
 
@@ -53,6 +56,9 @@ update-package:
 	pip install -r requirements.txt -t package
 
 zip-package:
+	@+echo $(HEADER)"---------------------------------------------"$(END)
+	@+echo $(HEADER)"Empaquetando código"$(END)
+	@+echo $(HEADER)"---------------------------------------------"$(END)
 	cd package && zip -r ../function.zip .
 	cd ..
 	zip -r function.zip tmp
@@ -61,10 +67,15 @@ zip-package:
 	zip function.zip lambda_function.py
 
 clean-package:
+	@+echo $(HEADER)"---------------------------------------------"$(END)
+	@+echo $(HEADER)"Limpiando archivos"$(END)
+	@+echo $(HEADER)"---------------------------------------------"$(END)
 	rm -rf package
 	rm function.zip
 
 test: dev_set lambda_invoke
+
+update: install-package zip-package dev_set update_lambda clean-package
 
 dev_set:
 	@+echo $(HEADER)"---------------------------------------------"$(END)
@@ -107,3 +118,18 @@ lambda_invoke:
 		echo $(OKGREEN)"\n\n[OK] Resultado de función lambda existoso."$(END); \
 	fi
 	@rm -rf output
+
+update_lambda:
+	@+echo $(HEADER)"---------------------------------------------"$(END)
+	@+echo $(HEADER)"Actualizando función lambda"$(END)
+	@+echo $(HEADER)"---------------------------------------------"$(END)
+	@+echo $(BOLD)""
+	@if ! aws lambda update-function-code \
+		--function-name $(FUNCTION_NAME) \
+		--zip-file fileb://function.zip \
+		--region $(AWS_REGION); then \
+		echo $(FAIL)"[ERROR] No se pudo actualizar la función lambda."$(END);\
+		exit 1; \
+	else \
+		echo $(OKGREEN)"[OK] Función lambda actualizada."$(END); \
+	fi
