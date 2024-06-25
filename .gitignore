@@ -168,3 +168,4 @@ package
 
 setup/secrets.json
 .scannerwork
+makefile
