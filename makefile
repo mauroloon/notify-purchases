@@ -73,6 +73,8 @@ clean-package:
 	rm -rf package
 	rm function.zip
 
+test-zip: install-package zip-package
+
 test: dev_set lambda_invoke
 
 update: install-package zip-package dev_set update_lambda clean-package
