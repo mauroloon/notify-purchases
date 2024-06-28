@@ -2,7 +2,8 @@ import base64
 from datetime import datetime
 from datetime import timedelta
 
-from googleapiclient.discovery import build
+# from googleapiclient.discovery import build
+from google_auth import make_build
 
 from utils import Logger
 from utils import get_credentials
@@ -14,7 +15,7 @@ logger = Logger(__name__)
 class EmailManager:
     def __init__(self) -> None:
         self.credentials = get_credentials()
-        self.service = build('gmail', 'v1', credentials=self.credentials)
+        self.service = make_build('gmail', 'v1', credentials=self.credentials)
 
     def check_credentials(self) -> bool:
         """

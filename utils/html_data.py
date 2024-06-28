@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 
 
 def get_payment_data_html(html_string):
-
     # Crear un objeto BeautifulSoup
     soup = BeautifulSoup(html_string, 'html.parser')
 
