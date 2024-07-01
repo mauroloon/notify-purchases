@@ -47,20 +47,19 @@ start:
 
 install-package:
 	@+echo $(HEADER)"---------------------------------------------"$(END)
-	@+echo $(HEADER)"Instalando paquetes en directorio 'package'"$(END)
+	@+echo $(HEADER)"Instalando paquetes en directorio '.venv'"$(END)
 	@+echo $(HEADER)"---------------------------------------------"$(END)
-	mkdir package
-	pip install -r requirements_need.txt -t package
+	mkdir .venv
+	pip install -r requirements_need.txt -t .venv
 
 update-package:
-	pip install -r requirements.txt -t package
+	pip install -r requirements.txt -t .venv
 
 zip-package:
 	@+echo $(HEADER)"---------------------------------------------"$(END)
 	@+echo $(HEADER)"Empaquetando código"$(END)
 	@+echo $(HEADER)"---------------------------------------------"$(END)
-	cd package && zip -r ../function.zip .
-	cd ..
+	zip -r function.zip .venv
 	zip -r function.zip tmp
 	zip -r function.zip utils
 	zip -r function.zip function
@@ -70,7 +69,7 @@ clean-package:
 	@+echo $(HEADER)"---------------------------------------------"$(END)
 	@+echo $(HEADER)"Limpiando archivos"$(END)
 	@+echo $(HEADER)"---------------------------------------------"$(END)
-	rm -rf package
+	rm -rf .venv
 	rm function.zip
 
 test-zip: install-package zip-package
