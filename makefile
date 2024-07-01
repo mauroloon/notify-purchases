@@ -50,7 +50,7 @@ install-package:
 	@+echo $(HEADER)"Instalando paquetes en directorio 'package'"$(END)
 	@+echo $(HEADER)"---------------------------------------------"$(END)
 	mkdir package
-	pip install -r requirements_lambda.txt -t package
+	pip install -r requirements_need.txt -t package
 
 update-package:
 	pip install -r requirements.txt -t package
