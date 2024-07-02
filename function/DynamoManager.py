@@ -67,3 +67,12 @@ class DynamoManager:
         for item in items:
             table.delete_item(Key={'id': item['id']})
         return
+
+    @staticmethod
+    def get_credential_token():
+        # Obtener el token de la base de datos dynamoDB
+        # convertir los datos del token en un archivo json
+        # guardar el archivo json en la carpeta tmp/data
+        # retornar la ruta del archivo json
+
+        pass
