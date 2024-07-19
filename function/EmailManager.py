@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from googleapiclient.discovery import build
 
+# NOTE: Ejemplo para ocupar funciones de los layers, pero no se ocupa actualmente jaja
 # from google_auth import make_build
 from utils import Logger
 from utils import get_credentials
@@ -15,6 +16,7 @@ logger = Logger(__name__)
 class EmailManager:
     def __init__(self) -> None:
         self.credentials = get_credentials()
+        # TODO: bug cuando no hay credenciales válidas.
         self.service = build('gmail', 'v1', credentials=self.credentials)
 
     def check_credentials(self) -> bool:

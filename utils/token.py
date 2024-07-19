@@ -34,6 +34,7 @@ def get_credentials():
             except Exception as e:
                 logger.error(f'Error al refrescar las credenciales: {e}')
                 DynamoManager.clean_gmail_data()
+                return None
         else:
             flow = InstalledAppFlow.from_client_secrets_file(credentials_file_path, SCOPES)
             credentials = flow.run_local_server(port=0)
