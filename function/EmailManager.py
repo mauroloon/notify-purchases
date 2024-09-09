@@ -113,7 +113,10 @@ class EmailManager:
                 if name == 'Subject':
                     subject = values['value']
 
-            if subject == 'Notificación de uso de tu tarjeta de crédito':
+            if subject in [
+                'Notificaci?n de uso de tu tarjeta de cr?dito',
+                'Notificación de uso de tu tarjeta de crédito',
+            ]:
                 message_body = base64.urlsafe_b64decode(
                     msg['payload']['body']['data'].encode('UTF-8')
                 ).decode('UTF-8')
