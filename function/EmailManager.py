@@ -110,7 +110,7 @@ class EmailManager:
                 name = values['name']
                 if name == 'From':
                     from_address = values['value']
-                if name == 'Subject':
+                elif name == 'Subject':
                     subject = values['value']
 
             if subject in [
